@@ -57,9 +57,9 @@
  }
  
  template <class T>
-@@ -103,8 +114,14 @@
+@@ -102,8 +113,14 @@
+     FStream << Style[I];
    }
-   FStream.flush();
    char Buffer[256];  // Should be enough for anywhen.
 +#if defined(__wasm__)
 +  (void)LT;
@@ -74,7 +74,7 @@
  void format_provider<UtcTime<std::chrono::seconds>>::format(
 --- a/llvm/lib/Support/LockFileManager.cpp
 +++ b/llvm/lib/Support/LockFileManager.cpp
-@@ -96,12 +96,17 @@
+@@ -97,12 +97,17 @@
    HostID.append(UUIDRef.begin(), UUIDRef.end());
  
  #elif LLVM_ON_UNIX
@@ -92,7 +92,7 @@
  
  #else
    StringRef Dummy("localhost");
-@@ -112,7 +117,11 @@
+@@ -113,7 +118,11 @@
  }
  
  bool LockFileManager::processStillExecuting(StringRef HostID, int PID) {

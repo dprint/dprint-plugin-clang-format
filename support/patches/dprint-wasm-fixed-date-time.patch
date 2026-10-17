@@ -1,34 +1,31 @@
 --- a/clang/lib/Lex/PPMacroExpansion.cpp
 +++ b/clang/lib/Lex/PPMacroExpansion.cpp
-@@ -1071,6 +1071,27 @@
- /// the identifier tokens inserted.
- static void ComputeDATE_TIME(SourceLocation &DATELoc, SourceLocation &TIMELoc,
-                              Preprocessor &PP) {
+@@ -1076,6 +1076,24 @@
+     return;
+   }
+ 
 +#if defined(__wasm__)
-+  {
-+    SmallString<32> TmpBuffer;
-+    llvm::raw_svector_ostream TmpStream(TmpBuffer);
-+    TmpStream << "\"Jan  1 1970\"";
++  if (!DATELoc.isValid()) {
 +    Token TmpTok;
 +    TmpTok.startToken();
-+    PP.CreateString(TmpStream.str(), TmpTok);
++    PP.CreateString("\"Jan  1 1970\"", TmpTok);
 +    DATELoc = TmpTok.getLocation();
 +  }
-+  {
-+    SmallString<32> TmpBuffer;
-+    llvm::raw_svector_ostream TmpStream(TmpBuffer);
-+    TmpStream << "\"00:00:00\"";
++  DATETokLen = strlen("\"Mmm dd yyyy\"");
++
++  if (!TIMELoc.isValid()) {
 +    Token TmpTok;
 +    TmpTok.startToken();
-+    PP.CreateString(TmpStream.str(), TmpTok);
++    PP.CreateString("\"00:00:00\"", TmpTok);
 +    TIMELoc = TmpTok.getLocation();
 +  }
++  TIMETokLen = strlen("\"hh:mm:ss\"");
 +  return;
 +#endif
    time_t TT;
    std::tm *TM;
    if (PP.getPreprocessorOpts().SourceDateEpoch) {
-@@ -1726,6 +1747,10 @@
+@@ -1733,6 +1751,10 @@
      Tok.setKind(tok::numeric_constant);
    } else if (II == Ident__TIMESTAMP__) {
      Diag(Tok.getLocation(), diag::warn_pp_date_time);
@@ -38,9 +35,9 @@
 +#else
      // MSVC, ICC, GCC, VisualAge C++ extension.  The generated string should be
      // of the form "Ddd Mmm dd hh::mm::ss yyyy", which is returned by asctime.
-     std::string Result;
-@@ -1752,6 +1777,7 @@
-       Result = "??? ??? ?? ??:??:?? ????";
+     std::string Result = "1"; // DateTimeInitKind::LiteralOne by default.
+@@ -1763,6 +1785,7 @@
+     }
      OS << '"' << Result << '"';
      Tok.setKind(tok::string_literal);
 +#endif

@@ -7,6 +7,9 @@
 #define FP_SUBNORMAL 3
 #define FP_NORMAL 4
 
+#define FP_ILOGBNAN (-1 - 0x7fffffff)
+#define FP_ILOGB0 FP_ILOGBNAN
+
 #define HUGE_VAL (__builtin_huge_val())
 #define HUGE_VALF (__builtin_huge_valf())
 #define HUGE_VALL (__builtin_huge_vall())
