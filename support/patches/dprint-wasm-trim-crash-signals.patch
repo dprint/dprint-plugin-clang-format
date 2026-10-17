@@ -1,6 +1,6 @@
 --- a/llvm/lib/Support/CrashRecoveryContext.cpp
 +++ b/llvm/lib/Support/CrashRecoveryContext.cpp
-@@ -73,8 +73,10 @@
+@@ -76,8 +76,10 @@
      CRC->RetCode = RetCode;
  
      // Jump back to the RunSafely we were called under.
@@ -11,7 +11,7 @@
  
      // Otherwise let the caller decide of the outcome of the crash. Currently
      // this occurs when using SEH on Windows with MSVC or clang-cl.
-@@ -331,6 +333,10 @@
+@@ -337,6 +339,10 @@
  
  #else // !_WIN32
  
@@ -22,7 +22,7 @@
  // Generic POSIX implementation.
  //
  // This implementation relies on synchronous signals being delivered to the
-@@ -408,6 +414,8 @@
+@@ -422,6 +428,8 @@
      sigaction(Signals[i], &PrevActions[i], nullptr);
  }
  
@@ -31,7 +31,7 @@
  #endif // !_WIN32
  
  bool CrashRecoveryContext::RunSafely(function_ref<void()> Fn) {
-@@ -417,10 +425,12 @@
+@@ -431,10 +439,12 @@
      CrashRecoveryContextImpl *CRCI = new CrashRecoveryContextImpl(this);
      Impl = CRCI;
  
@@ -44,7 +44,7 @@
    }
  
    Fn();
-@@ -469,6 +479,8 @@
+@@ -483,6 +493,8 @@
      return false;
  #if defined(_WIN32)
    ::RaiseException(RetCode, 0, 0, NULL);

@@ -4,7 +4,7 @@ project(dprint_plugin_clang_format LANGUAGES C CXX)
 
 include(ExternalProject)
 
-set(LLVM_SRC "${PROJECT_SOURCE_DIR}/third_party/llvm-project-22.1.8.src" CACHE PATH
+set(LLVM_SRC "${PROJECT_SOURCE_DIR}/third_party/llvm-project-23.1.3.src" CACHE PATH
     "Patched LLVM source directory")
 set(LLVM_NATIVE_BUILD "${PROJECT_BINARY_DIR}/llvm-native" CACHE PATH
     "LLVM native tools build directory")

@@ -1,6 +1,6 @@
 --- a/llvm/lib/Support/Jobserver.cpp
 +++ b/llvm/lib/Support/Jobserver.cpp
-@@ -198,6 +198,9 @@
+@@ -193,6 +193,9 @@
  /// initialize a `JobserverClientImpl`. If successful, the global instance is
  /// stored in `GJobserver`. Subsequent calls will return the existing instance.
  JobserverClient *JobserverClient::getInstance() {
@@ -10,7 +10,7 @@
    std::call_once(GJobserverOnceFlag, []() {
      LLVM_DEBUG(
          dbgs()
-@@ -244,6 +247,7 @@
+@@ -239,6 +242,7 @@
        errs() << "Warning: jobserver client initialization failed.\n";
    });
    return GJobserver;
@@ -60,7 +60,7 @@
  }
  
  #if LLVM_ENABLE_DEBUGLOC_TRACKING_ORIGIN
-@@ -338,6 +351,13 @@
+@@ -342,6 +355,13 @@
  LLVM_ATTRIBUTE_USED
  static bool printMarkupStackTrace(StringRef Argv0, void **StackTrace, int Depth,
                                    raw_ostream &OS) {
@@ -74,7 +74,7 @@
    const char *Env = getenv(EnableSymbolizerMarkupEnv);
    if (!Env || !*Env)
      return false;
-@@ -350,6 +370,7 @@
+@@ -354,6 +374,7 @@
    for (int I = 0; I < Depth; I++)
      OS << format("{{{bt:%d:%#016x}}}\n", I, StackTrace[I]);
    return true;
@@ -124,8 +124,8 @@
  
  size_t Process::GetMallocUsage() {
 @@ -136,6 +146,10 @@
- // their operation. To prevent the disk from filling up, this function
- // does what's necessary to prevent their generation.
+ // their operation. To prevent the disk from filling up, this function does
+ // what's necessary to prevent their generation.
  void Process::PreventCoreFiles() {
 +#if defined(__wasm__)
 +  coreFilesPrevented = true;
@@ -217,7 +217,7 @@
    // Check if the current terminal is one of terminals that are known to support
    // ANSI color escape codes.
    if (const char *TermStr = std::getenv("TERM")) {
-@@ -360,6 +398,7 @@
+@@ -363,6 +401,7 @@
    }
  
    return false;
@@ -225,7 +225,7 @@
  }
  
  bool Process::FileDescriptorHasColors(int fd) {
-@@ -397,6 +436,9 @@
+@@ -400,6 +439,9 @@
  
  #if !HAVE_DECL_ARC4RANDOM
  static unsigned GetRandomNumberSeed() {
@@ -235,7 +235,7 @@
    // Attempt to get the initial seed from /dev/urandom, if possible.
    int urandomFD = open("/dev/urandom", O_RDONLY);
  
-@@ -417,6 +459,7 @@
+@@ -420,6 +462,7 @@
    // seed.
    const auto Now = std::chrono::high_resolution_clock::now();
    return hash_combine(Now.time_since_epoch().count(), ::getpid());

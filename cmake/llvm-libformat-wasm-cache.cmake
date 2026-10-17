@@ -8,8 +8,10 @@ set(DPRINT_CLANG_FORMAT_HOST_FLAGS
 
 set(DPRINT_CLANG_FORMAT_C_FLAGS
     "-ffreestanding ${DPRINT_CLANG_FORMAT_HOST_FLAGS} -DCLANG_BUILD_STATIC=1 -isystem ${DPRINT_CLANG_FORMAT_REPO_ROOT}/support/wasm-sysroot/include")
+# libc++ 23 no longer includes <cctype> transitively from <vector>, which some
+# LLVM and Clang sources rely on, so force-include it.
 set(DPRINT_CLANG_FORMAT_CXX_FLAGS
-    "-ffreestanding ${DPRINT_CLANG_FORMAT_HOST_FLAGS} -DCLANG_BUILD_STATIC=1 -fno-exceptions -fno-rtti -fno-threadsafe-statics -nostdinc++ -D_LIBCPP_DISABLE_EXTERN_TEMPLATE -isystem ${DPRINT_CLANG_FORMAT_REPO_ROOT}/support/libcxx-wasm/include -isystem ${CMAKE_SOURCE_DIR}/../libcxx/include -isystem ${CMAKE_SOURCE_DIR}/../libcxx/src/include -isystem ${DPRINT_CLANG_FORMAT_REPO_ROOT}/support/wasm-sysroot/include")
+    "-ffreestanding ${DPRINT_CLANG_FORMAT_HOST_FLAGS} -DCLANG_BUILD_STATIC=1 -include cctype -fno-exceptions -fno-rtti -fno-threadsafe-statics -nostdinc++ -D_LIBCPP_DISABLE_EXTERN_TEMPLATE -isystem ${DPRINT_CLANG_FORMAT_REPO_ROOT}/support/libcxx-wasm/include -isystem ${CMAKE_SOURCE_DIR}/../libcxx/include -isystem ${CMAKE_SOURCE_DIR}/../libcxx/src/include -isystem ${DPRINT_CLANG_FORMAT_REPO_ROOT}/support/wasm-sysroot/include")
 
 set(CMAKE_BUILD_TYPE "MinSizeRel" CACHE STRING "" FORCE)
 set(CMAKE_SYSTEM_NAME "Generic" CACHE STRING "" FORCE)

@@ -1,14 +1,14 @@
 --- a/clang/lib/Basic/FileManager.cpp
 +++ b/clang/lib/Basic/FileManager.cpp
 @@ -23,6 +23,7 @@
- #include "llvm/Config/llvm-config.h"
+ #include "llvm/Support/Error.h"
  #include "llvm/Support/FileSystem.h"
  #include "llvm/Support/IOSandbox.h"
 +#include "llvm/Support/VirtualFileSystem.h"
  #include "llvm/Support/MemoryBuffer.h"
  #include "llvm/Support/Path.h"
  #include "llvm/Support/raw_ostream.h"
-@@ -48,8 +49,13 @@
+@@ -69,8 +70,13 @@
        SeenFileEntries(64), NextFileUID(0) {
    // If the caller doesn't provide a virtual file system, just grab the real
    // file system.
@@ -25,7 +25,7 @@
  FileManager::~FileManager() = default;
 --- a/clang/lib/Format/Format.cpp
 +++ b/clang/lib/Format/Format.cpp
-@@ -4431,8 +4431,13 @@
+@@ -4672,8 +4672,13 @@
          llvm::MemoryBuffer::getMemBuffer(StyleName, Source, false));
    }
  
@@ -42,19 +42,18 @@
    const bool IsDotHFile = FileName.ends_with(".h");
 --- a/llvm/lib/Support/raw_ostream.cpp
 +++ b/llvm/lib/Support/raw_ostream.cpp
-@@ -557,6 +557,11 @@
-                  sys::fs::OpenFlags Flags) {
+@@ -544,16 +544,26 @@
    // FIXME(sandboxing): Remove this by adopting `llvm::vfs::OutputBackend`.
    auto BypassSandbox = sys::sandbox::scopedDisable();
-+
+ 
 +#if defined(__wasm__)
 +  EC = std::make_error_code(std::errc::operation_not_supported);
 +  return -1;
 +#endif
- 
++
    assert((Access & sys::fs::FA_Write) &&
           "Cannot make a raw_ostream from a read-only descriptor!");
-@@ -564,10 +569,15 @@
+ 
    // Handle "-" as stdout. Note that when we do this, we consider ourself
    // the owner of stdout and may set the "binary" flag globally based on Flags.
    if (Filename == "-") {
@@ -70,7 +69,7 @@
    }
  
    int FD;
-@@ -618,6 +628,12 @@
+@@ -604,6 +614,12 @@
      return;
    }
  
@@ -83,7 +82,7 @@
    enable_colors(true);
  
    // Do not attempt to close stdout or stderr. We used to try to maintain the
-@@ -729,6 +745,11 @@
+@@ -715,6 +731,11 @@
  #endif
  
  void raw_fd_ostream::write_impl(const char *Ptr, size_t Size) {
@@ -95,7 +94,7 @@
    if (TiedStream)
      TiedStream->flush();
  
-@@ -806,6 +827,10 @@
+@@ -792,6 +813,10 @@
  }
  
  uint64_t raw_fd_ostream::seek(uint64_t off) {
@@ -106,7 +105,7 @@
    assert(SupportsSeeking && "Stream does not support seeking!");
    flush();
  #ifdef _WIN32
-@@ -820,6 +845,12 @@
+@@ -806,6 +831,12 @@
  
  void raw_fd_ostream::pwrite_impl(const char *Ptr, size_t Size,
                                   uint64_t Offset) {
@@ -119,7 +118,7 @@
    uint64_t Pos = tell();
    seek(Offset);
    write(Ptr, Size);
-@@ -840,6 +871,8 @@
+@@ -826,6 +857,8 @@
    // The buffer size on z/OS is defined with macro BUFSIZ, which can be
    // retrieved by invoking function raw_ostream::preferred_buffer_size().
    return raw_ostream::preferred_buffer_size();
@@ -128,7 +127,7 @@
  #else
    assert(FD >= 0 && "File not yet open!");
    struct stat statbuf;
-@@ -939,6 +972,12 @@
+@@ -925,6 +958,12 @@
  
  ssize_t raw_fd_stream::read(char *Ptr, size_t Size) {
    assert(get_fd() >= 0 && "File already closed.");

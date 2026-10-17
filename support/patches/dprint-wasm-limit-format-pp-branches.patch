@@ -1,6 +1,6 @@
 --- a/clang/lib/Format/UnwrappedLineParser.cpp
 +++ b/clang/lib/Format/UnwrappedLineParser.cpp
-@@ -242,6 +242,36 @@
+@@ -246,6 +246,36 @@
      }
      Callback.finishRun();
      Lines.clear();
@@ -37,7 +37,7 @@
      while (!PPLevelBranchIndex.empty() &&
             PPLevelBranchIndex.back() + 1 >= PPLevelBranchCount.back()) {
        PPLevelBranchIndex.resize(PPLevelBranchIndex.size() - 1);
-@@ -254,6 +284,7 @@
+@@ -256,6 +286,7 @@
        assert(PPLevelBranchIndex.size() == PPLevelBranchCount.size());
        assert(PPLevelBranchIndex.back() <= PPLevelBranchCount.back());
      }
