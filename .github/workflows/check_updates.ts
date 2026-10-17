@@ -16,10 +16,13 @@ const buildJob = job("build", {
     },
     { uses: "denoland/setup-deno@v2" },
     // the update script runs `mise run test` and `mise run hygiene` as its
-    // checks. The mise toolchain also provides node, which the update script
-    // needs to install and run the OpenAI Codex CLI (@openai/codex) when it
-    // has to reconcile an LLVM update.
+    // checks, which need the mise toolchain.
     { uses: "./.github/actions/setup-ci-deps" },
+    // node is needed so the update script can install and run the OpenAI
+    // Codex CLI (@openai/codex) when it has to reconcile an LLVM update. This
+    // comes after the mise toolchain so `npm install -g` puts codex on the PATH
+    // without a `mise reshim`.
+    { uses: "actions/setup-node@v6", with: { "node-version": "24.x" } },
     {
       name: "Run script",
       env: {
