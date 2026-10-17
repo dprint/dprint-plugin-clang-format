@@ -31,9 +31,9 @@ struct ConfigDiagnostic {
 constexpr const char *plugin_name = "dprint-plugin-clang-format";
 constexpr const char *plugin_version = DPRINT_PLUGIN_VERSION;
 constexpr const char *plugin_help_url =
-    "https://github.com/sargunv/dprint-clang-format";
+    "https://dprint.dev/plugins/clang-format";
 constexpr const char *plugin_update_url =
-    "https://plugins.dprint.dev/sargunv/dprint-clang-format/latest.json";
+    "https://plugins.dprint.dev/dprint/dprint-plugin-clang-format/latest.json";
 constexpr const char *plugin_file_extensions_json =
     "[\"c\",\"cc\",\"cpp\",\"cxx\",\"h\",\"hh\",\"hpp\",\"hxx\",\"m\",\"mm\"]";
 
@@ -41,7 +41,7 @@ constexpr const char *license_text =
     "Apache-2.0 WITH LLVM-exception\n"
     "\n"
     "See "
-    "https://github.com/sargunv/dprint-clang-format/blob/main/LICENSE\n";
+    "https://github.com/dprint/dprint-plugin-clang-format/blob/main/LICENSE\n";
 
 struct RegisteredConfig {
   uint32_t id = 0;

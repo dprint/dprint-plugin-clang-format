@@ -12,9 +12,18 @@ LLVM/Clang LibFormat.
 - `CMakeLists.txt` configures the `wasm32-unknown-unknown` plugin link and
   drives the nested LLVM native-tool and Wasm LibFormat builds.
 - `scripts/` contains focused helper scripts that are still useful outside mise
-  task bodies.
+  task bodies, plus the Deno release automation: `update.ts` (daily LLVM
+  update), `ai_fix.ts` (Codex fixer and reviewer for updates),
+  `publish_release.ts` (bumps the plugin version and tags a release), and
+  `generateReleaseNotes.ts`.
 - `tests/` contains Bats integration tests that exercise the plugin through
   dprint.
+- `deployment/` contains the published `schema.json` (its `$id` keeps version
+  `0.0.0`, which CI replaces on release) and the `@dprint/clang-format` npm
+  package.
+- `.github/workflows/*.ts` generate the `*.generated.yml` workflows with gagen.
+  Never edit the YAML. Run `deno run -A <file>.ts` to regenerate, and
+  `deno run -A <file>.ts --lint` to check it is in sync.
 - `support/patches/` contains small LLVM patches for the freestanding Wasm
   build.
 - `support/wasm-sysroot/` and `support/libcxx-wasm/` contain the minimal
@@ -28,6 +37,18 @@ LLVM/Clang LibFormat.
 - `mise run configure` configures the top-level CMake project.
 - `mise run build` builds the LibFormat archive closure and plugin Wasm.
 - `mise run test` builds, then tests `build/plugin.wasm`.
+- `mise run hygiene` validates the mise tasks and checks formatting with dprint.
+
+## Versions and releases
+
+- The LLVM version is pinned by `llvm_version` in `scripts/fetch_llvm.sh`, and
+  by the same version string in the other files listed in `scripts/update.ts`
+  plus the `pixi.toml` ranges. `scripts/update.ts` bumps all of them.
+- The plugin version is the `VERSION` in the `project()` call of
+  `CMakeLists.txt`. Don't change it by hand; the `release` workflow and
+  `scripts/update.ts` bump it with `scripts/publish_release.ts`, which also
+  commits, tags, and pushes. A pushed tag makes CI create the GitHub release and
+  `publish_npm` publish `@dprint/clang-format`.
 
 ## Project invariants
 

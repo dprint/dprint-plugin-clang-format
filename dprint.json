@@ -1,0 +1,23 @@
+{
+  "$schema": "https://dprint.dev/schemas/v0.json",
+  "lineWidth": 80,
+  "indentWidth": 2,
+  "useTabs": false,
+  "newLineKind": "lf",
+  "excludes": [
+    "support/allocators/dlmalloc/malloc.c",
+    "**/*.generated.yml",
+    "**/node_modules",
+    "**/*-lock.json"
+  ],
+  "json": { "preferSingleLine": true },
+  "markdown": { "textWrap": "always" },
+  "plugins": [
+    "npm:@dprint/typescript@0.96.1",
+    "npm:@dprint/json@0.22.0",
+    "npm:@dprint/toml@0.7.0",
+    "npm:@dprint/markdown@0.22.1",
+    "https://plugins.dprint.dev/g-plane/pretty_yaml-v0.6.0.wasm",
+    "https://plugins.dprint.dev/clang-format-0.1.0.wasm"
+  ]
+}

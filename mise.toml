@@ -15,7 +15,7 @@ lockfile_platforms = [
 [tools]
 "aqua:apple/pkl" = "0.31.1"
 "aqua:bats-core/bats-core" = "1.13.0"
-"aqua:dprint/dprint" = "0.54.0"
+"aqua:dprint/dprint" = "0.63.0"
 "aqua:jdx/hk" = "1.48.0"
 "aqua:Kitware/CMake" = "4.3.3"
 "aqua:ninja-build/ninja" = "1.13.2"
