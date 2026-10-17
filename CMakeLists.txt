@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 
-project(dprint_plugin_clang_format LANGUAGES C CXX)
+# the plugin version, which scripts/publish_release.ts bumps on release
+project(dprint_plugin_clang_format VERSION 0.1.0 LANGUAGES C CXX)
 
 include(ExternalProject)
 
@@ -11,20 +12,10 @@ set(LLVM_NATIVE_BUILD "${PROJECT_BINARY_DIR}/llvm-native" CACHE PATH
 set(LLVM_WASM_BUILD "${PROJECT_BINARY_DIR}/llvm-wasm" CACHE PATH
     "LLVM wasm build directory")
 set(PLUGIN_OUTPUT_DIR "${PROJECT_SOURCE_DIR}/build" CACHE PATH "Plugin output directory")
-set(DPRINT_PLUGIN_VERSION "" CACHE STRING
-    "Plugin version. Defaults to the release tag in GitHub Actions, or 0.0.0 locally.")
-set(DPRINT_PLUGIN_SCHEMA_BASE_URL "https://plugins.dprint.dev/sargunv/dprint-clang-format"
+set(DPRINT_PLUGIN_SCHEMA_BASE_URL "https://plugins.dprint.dev/dprint/dprint-plugin-clang-format"
     CACHE STRING "Base URL for published plugin schemas")
 
-if(DPRINT_PLUGIN_VERSION STREQUAL "")
-  if(DEFINED ENV{GITHUB_REF_NAME} AND "$ENV{GITHUB_REF_NAME}" MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+$")
-    set(DPRINT_PLUGIN_VERSION "$ENV{GITHUB_REF_NAME}" CACHE STRING
-        "Plugin version. Defaults to the release tag in GitHub Actions, or 0.0.0 locally." FORCE)
-  else()
-    set(DPRINT_PLUGIN_VERSION "0.0.0" CACHE STRING
-        "Plugin version. Defaults to the release tag in GitHub Actions, or 0.0.0 locally." FORCE)
-  endif()
-endif()
+set(DPRINT_PLUGIN_VERSION "${PROJECT_VERSION}")
 message(STATUS "dprint plugin version: ${DPRINT_PLUGIN_VERSION}")
 
 set(CMAKE_C_STANDARD 23)

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://plugins.dprint.dev/dprint/dprint-plugin-clang-format/0.0.0/schema.json",
+  "title": "dprint clang-format plugin configuration",
+  "description": "clang-format options using clang-format YAML option names represented as JSON. Unknown or invalid options are reported by clang-format during dprint configuration resolution.",
+  "type": "object",
+  "properties": {
+    "BasedOnStyle": {
+      "type": "string",
+      "description": "Predefined clang-format base style, such as LLVM, Google, Chromium, Mozilla, WebKit, Microsoft, or GNU. Filesystem-dependent values such as file and InheritParentConfig are not supported in the sandboxed Wasm plugin."
+    }
+  },
+  "additionalProperties": { "$ref": "#/definitions/clangFormatValue" },
+  "definitions": {
+    "clangFormatValue": {
+      "description": "A JSON representation of a clang-format YAML scalar, sequence, or mapping.",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "integer" },
+        { "type": "boolean" },
+        { "type": "null" },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/clangFormatValue" }
+        },
+        {
+          "type": "object",
+          "additionalProperties": { "$ref": "#/definitions/clangFormatValue" }
+        }
+      ]
+    }
+  }
+}

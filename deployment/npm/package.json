@@ -1,0 +1,27 @@
+{
+  "name": "@dprint/clang-format",
+  "version": "0.0.0",
+  "description": "Wasm buffer for dprint-plugin-clang-format.",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dprint/dprint-plugin-clang-format.git"
+  },
+  "keywords": [
+    "clang-format",
+    "c",
+    "cpp",
+    "objective-c",
+    "code",
+    "formatter",
+    "dprint"
+  ],
+  "license": "Apache-2.0 WITH LLVM-exception",
+  "bugs": {
+    "url": "https://github.com/dprint/dprint-plugin-clang-format/issues"
+  },
+  "homepage": "https://github.com/dprint/dprint-plugin-clang-format#readme",
+  "scripts": { "test": "node index.test.js" },
+  "devDependencies": { "@dprint/formatter": "~0.4.0" }
+}
