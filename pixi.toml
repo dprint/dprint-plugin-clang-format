@@ -4,10 +4,10 @@ platforms = ["osx-arm64", "linux-64", "linux-aarch64"]
 
 [dependencies]
 # C/C++ compiler used by CMake for the freestanding Wasm build.
-clangxx = ">=23.1.3,<23.2"
+clangxx = ">=23.1.4,<23.2"
 # Linker used by clang for wasm32-unknown-unknown.
-lld = ">=23.1.3,<23.2"
+lld = ">=23.1.4,<23.2"
 # Native clang-format oracle for tests and benchmarks.
-clang-format = ">=23.1.3,<23.2"
+clang-format = ">=23.1.4,<23.2"
 # Wasm inspection tools used by integration tests.
 wabt = ">=1.0.37,<2"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-llvm_version="23.1.3"
+llvm_version="23.1.4"
 archive_name="llvm-project-${llvm_version}.src.tar.xz"
 release_tag="llvmorg-${llvm_version}"
 url="https://github.com/llvm/llvm-project/releases/download/${release_tag}/${archive_name}"

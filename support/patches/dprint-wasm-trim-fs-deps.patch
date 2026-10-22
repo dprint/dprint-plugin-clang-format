@@ -1087,7 +1087,7 @@
  /// Process the FilesToRemove list.
 --- a/llvm/lib/Support/raw_socket_stream.cpp
 +++ b/llvm/lib/Support/raw_socket_stream.cpp
-@@ -76,6 +76,12 @@
+@@ -91,6 +91,12 @@
  }
  
  static Expected<int> getSocketFD(StringRef SocketPath) {
@@ -1097,10 +1097,10 @@
 +      std::make_error_code(std::errc::operation_not_supported),
 +      "unix sockets are unavailable on wasm");
 +#else
- #ifdef _WIN32
-   SOCKET Socket = socket(AF_UNIX, SOCK_STREAM, 0);
+   NativeSocket Socket = socket(AF_UNIX, SOCK_STREAM, 0);
    if (Socket == INVALID_SOCKET) {
-@@ -111,6 +117,7 @@
+     return llvm::make_error<StringError>(getLastSocketErrorCode(),
+@@ -124,6 +130,7 @@
  #else
    return Socket;
  #endif // _WIN32
@@ -1108,7 +1108,7 @@
  }
  
  ListeningSocket::ListeningSocket(int SocketFD, StringRef SocketPath,
-@@ -129,6 +136,13 @@
+@@ -142,6 +149,13 @@
  
  Expected<ListeningSocket> ListeningSocket::createUnix(StringRef SocketPath,
                                                        int MaxBacklog) {
@@ -1122,7 +1122,7 @@
  
    // Handle instances where the target socket address already exists and
    // differentiate between a preexisting file with and without a bound socket
-@@ -207,6 +221,7 @@
+@@ -219,6 +233,7 @@
  #else
    return ListeningSocket{Socket, SocketPath, PipeFD};
  #endif // _WIN32
@@ -1130,7 +1130,7 @@
  }
  
  // If a file descriptor being monitored by ::poll is closed by another thread,
-@@ -222,6 +237,12 @@
+@@ -234,6 +249,12 @@
  manageTimeout(const std::chrono::milliseconds &Timeout,
                const std::function<int()> &getActiveFD,
                const std::optional<int> &CancelFD = std::nullopt) {
@@ -1143,7 +1143,7 @@
    struct pollfd FD[2];
    FD[0].events = POLLIN;
  #ifdef _WIN32
-@@ -284,6 +305,12 @@
+@@ -296,6 +317,12 @@
  
  Expected<std::unique_ptr<raw_socket_stream>>
  ListeningSocket::accept(const std::chrono::milliseconds &Timeout) {
@@ -1156,7 +1156,7 @@
    auto getActiveFD = [this]() -> int { return FD; };
    std::error_code TimeoutErr = manageTimeout(Timeout, getActiveFD, PipeFD[0]);
    if (TimeoutErr)
-@@ -301,6 +328,7 @@
+@@ -313,6 +340,7 @@
      return llvm::make_error<StringError>(getLastSocketErrorCode(),
                                           "Socket accept failed");
    return std::make_unique<raw_socket_stream>(AcceptFD);
@@ -1164,7 +1164,7 @@
  }
  
  void ListeningSocket::shutdown() {
-@@ -309,6 +337,11 @@
+@@ -321,6 +349,11 @@
    if (ObservedFD == -1)
      return;
  
@@ -1176,7 +1176,7 @@
    // If FD equals ObservedFD set FD to -1; If FD doesn't equal ObservedFD then
    // another thread is responsible for shutdown so return
    if (!FD.compare_exchange_strong(ObservedFD, -1))
-@@ -328,6 +361,10 @@
+@@ -340,6 +373,10 @@
  ListeningSocket::~ListeningSocket() {
    shutdown();
  
