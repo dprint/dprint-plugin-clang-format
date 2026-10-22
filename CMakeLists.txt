@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.0)
 
 # the plugin version, which scripts/publish_release.ts bumps on release
-project(dprint_plugin_clang_format VERSION 0.2.0 LANGUAGES C CXX)
+project(dprint_plugin_clang_format VERSION 0.2.1 LANGUAGES C CXX)
 
 include(ExternalProject)
 
