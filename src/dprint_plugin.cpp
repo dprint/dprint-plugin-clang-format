@@ -509,7 +509,8 @@ uint32_t get_plugin_info() {
       plugin_version + "\",\"configKey\":\"clangFormat\",\"fileExtensions\":" +
       plugin_file_extensions_json + ",\"helpUrl\":\"" + plugin_help_url +
       "\",\"configSchemaUrl\":\"" + plugin_config_schema_url() +
-      "\",\"updateUrl\":\"" + plugin_update_url + "\"}");
+      "\",\"updateUrl\":\"" + plugin_update_url +
+      "\",\"supportsRangeFormatting\":true}");
 }
 
 uint32_t get_license_text() { return set_shared_string(license_text); }
