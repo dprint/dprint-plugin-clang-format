@@ -49,10 +49,19 @@ const buildJob = job("build", {
   steps: [
     { uses: "actions/checkout@v6" },
     setupCiDeps,
-    // deno is needed by the "Pre-release" step on a tag
+    // deno is needed by the "Generate config schema" step and, on a tag, by
+    // the "Pre-release" step
     { uses: "denoland/setup-deno@v2", with: { "deno-version": "v2.x" } },
 
     { name: "Build and test", run: "mise run test" },
+    // checks the playground sample of the config schema
+    {
+      name: "Generate config schema",
+      run: [
+        "deno run -A --minimum-dependency-age=0 jsr:@dprint/automation@0.14.3/tasks/publish-schema",
+        "build/plugin.wasm deployment/schema.json --extension cpp",
+      ].join(" "),
+    },
     {
       name: "Upload plugin Wasm",
       uses: "actions/upload-artifact@v7",
