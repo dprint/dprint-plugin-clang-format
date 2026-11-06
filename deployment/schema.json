@@ -4,10 +4,38 @@
   "title": "dprint clang-format plugin configuration",
   "description": "clang-format options using clang-format YAML option names represented as JSON. Unknown or invalid options are reported by clang-format during dprint configuration resolution.",
   "type": "object",
+  "x-playground": {
+    "input": [
+      "#include <string>",
+      "#include <vector>",
+      "#include <algorithm>",
+      "",
+      "namespace inventory {",
+      "struct Item{std::string name;int quantity;double price;};",
+      "",
+      "class Warehouse {",
+      "public:",
+      "  void add(const Item& item){items_.push_back(item);}",
+      "  double totalValue() const {",
+      "    double total=0;",
+      "    for(const auto &item:items_) total+=item.quantity*item.price;",
+      "    return total;",
+      "  }",
+      "  std::vector<Item> lowStock(int threshold)const{",
+      "      std::vector<Item> result;",
+      "      std::copy_if(items_.begin(),items_.end(),std::back_inserter(result),[threshold](const Item&item){return item.quantity<threshold;});",
+      "      return result;",
+      "  }",
+      "private:",
+      "  std::vector<Item> items_;",
+      "};",
+      "}"
+    ]
+  },
   "properties": {
     "BasedOnStyle": {
       "type": "string",
-      "description": "Predefined clang-format base style, such as LLVM, Google, Chromium, Mozilla, WebKit, Microsoft, or GNU. Filesystem-dependent values such as file and InheritParentConfig are not supported in the sandboxed Wasm plugin."
+      "description": "Predefined clang-format base style, such as `LLVM`, `Google`, `Chromium`, `Mozilla`, `WebKit`, `Microsoft`, or `GNU`. Filesystem-dependent values such as `file` and `InheritParentConfig` are not supported in the sandboxed Wasm plugin."
     }
   },
   "additionalProperties": { "$ref": "#/definitions/clangFormatValue" },

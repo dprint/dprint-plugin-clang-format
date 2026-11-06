@@ -43,6 +43,8 @@ jobs:
           deno-version: v2.x
       - name: Build and test
         run: mise run test
+      - name: Generate config schema
+        run: 'deno run -A --minimum-dependency-age=0 jsr:@dprint/automation@0.14.3/tasks/publish-schema build/plugin.wasm deployment/schema.json --extension cpp'
       - name: Upload plugin Wasm
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
